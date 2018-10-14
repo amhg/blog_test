@@ -1,6 +1,9 @@
 package com.blog.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "post")
@@ -11,33 +14,39 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Size(max = 15)
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "content", columnDefinition = "TEXT")
-    private String content;//relation with user
+    @Size(max = 25)
+    @Column(name = "content")
+    private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private Users user;
 
-    @Column(name = "creation_date", nullable = false)
-    private int timestamp;
+    public Post() {
+    }
 
-    @Column(name = "approved", nullable = false)
-    private boolean approved;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
-    private Category category;
-
-    public Post(String title, String content, User user, int timestamp, Category category) {
+/*
+    public Post(String title, String content, Users user, int timestamp, Category category) {
         this.title = title;
         this.content = content;
         this.user = user;
         this.timestamp = timestamp;
         this.approved = false;
         this.category = category;
+    }
+    */
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -56,27 +65,12 @@ public class Post {
         this.content = content;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 
-    public int getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
 }

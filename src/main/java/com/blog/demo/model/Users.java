@@ -1,49 +1,60 @@
 package com.blog.demo.model;
 
-import com.blog.demo.model.Post;
-import com.blog.demo.model.Role;
-
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
-public class User {
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long id;
 
+    @Size(max = 25)
     @Column(name = "name")
     private String name;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Size(max = 10)
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Size(max = 25)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Size(max = 10)
+    @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private Collection<Post> posts;
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "user")
+    private List<Post> posts;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "user_role",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")}
-            )
-    private Collection<Role> roles;
+    public Users() {
+    }
 
-
-    public User(String name, String username, String email, String password) {
+    /*
+    public Users(String name, String username, String email, String password) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+    */
+
+    public Long getId()
+    {
+        return id;
+    }
+
+    public void setId( Long id )
+    {
+        this.id = id;
     }
 
     public String getName() {
@@ -78,19 +89,11 @@ public class User {
         this.password = password;
     }
 
-    public Collection<Post> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(Collection<Post> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
-    }
-
-    public Collection<Role> getRole() {
-        return roles;
-    }
-
-    public void setRole(Collection<Role> roles) {
-        this.roles = roles;
     }
 }
